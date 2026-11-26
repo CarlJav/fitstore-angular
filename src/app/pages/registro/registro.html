@@ -1,0 +1,217 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+  <div>
+    <h2 class="mb-1">Registrar Pedido</h2>
+    <p class="text-muted mb-0">Completa tus datos, agrega uno o más productos.</p>
+  </div>
+  <a routerLink="/catalogo" class="btn btn-outline-primary">Volver al catálogo</a>
+</div>
+
+@if (mensajeError) {
+  <div class="alert alert-danger">{{ mensajeError }}</div>
+}
+
+@if (mensajeExito) {
+  <div
+    class="alert alert-success d-flex flex-wrap justify-content-between align-items-center gap-2"
+  >
+    <span>{{ mensajeExito }}</span>
+    <button type="button" class="btn btn-sm btn-success" (click)="irAlHistorial()">
+      Ver en Historial
+    </button>
+  </div>
+}
+
+<div class="row g-4">
+  <div class="col-12 col-lg-7">
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+        <form [formGroup]="form" (ngSubmit)="guardarPedido()">
+          <div class="mb-3">
+            <label for="cliente" class="form-label fw-semibold"
+              >Nombre y apellido del cliente</label
+            >
+            <input
+              id="cliente"
+              type="text"
+              class="form-control"
+              formControlName="cliente"
+              placeholder="Ej. Carlos Mendoza"
+            />
+            @if (form.controls.cliente.touched && form.controls.cliente.invalid) {
+              <div class="text-danger small mt-1">
+                @if (form.controls.cliente.errors?.['required']) {
+                  El nombre y apellido del cliente son obligatorios.
+                } @else {
+                  Ingresa nombre y almenos un apellido .
+                }
+              </div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label for="celular" class="form-label fw-semibold">Número de celular</label>
+            <input
+              id="celular"
+              type="tel"
+              inputmode="numeric"
+              maxlength="8"
+              class="form-control"
+              formControlName="celular"
+              (input)="soloNumerosCelular($event)"
+              placeholder="Ej. 71234567"
+            />
+            @if (form.controls.celular.touched && form.controls.celular.invalid) {
+              <div class="text-danger small mt-1">
+                @if (form.controls.celular.errors?.['required']) {
+                  El número de celular es obligatorio.
+                } @else {
+                  Debe tener 8 dígitos y comenzar con 6 o 7.
+                }
+              </div>
+            }
+          </div>
+
+          @if (itemsPedido.length === 0) {
+            <div class="mb-3">
+              <label for="productoId" class="form-label fw-semibold">Producto</label>
+              <select id="productoId" class="form-select" formControlName="productoId">
+                @for (prod of productos; track prod.id) {
+                  <option [ngValue]="prod.id" [disabled]="prod.stock === 0">
+                    {{ prod.nombre }} —
+                    {{ prod.precio | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO' }} (Stock:
+                    {{ prod.stock }})
+                  </option>
+                }
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="cantidad" class="form-label fw-semibold">Cantidad</label>
+              <input
+                id="cantidad"
+                type="number"
+                min="1"
+                class="form-control"
+                formControlName="cantidad"
+              />
+              @if (form.controls.cantidad.touched && form.controls.cantidad.invalid) {
+                <div class="text-danger small mt-1">La cantidad debe ser al menos 1.</div>
+              }
+            </div>
+
+            <div class="mb-4">
+              <button
+                type="button"
+                class="btn btn-outline-primary btn-sm"
+                (click)="agregarProducto()"
+              >
+                + Agregar producto al pedido
+              </button>
+            </div>
+          } @else {
+            <div class="d-flex justify-content-between align-items-center mb-2">
+              <span class="fw-semibold">Mis productos</span>
+              <a routerLink="/catalogo" class="btn btn-link btn-sm p-0 text-decoration-none">
+                + Elegir más en catálogo
+              </a>
+            </div>
+
+            <div class="table-responsive mb-4 border rounded">
+              <table class="table table-sm align-middle mb-0">
+                <thead class="table-light">
+                  <tr>
+                    <th>Producto</th>
+                    <th class="text-center">Cant.</th>
+                    <th class="text-end">Subtotal</th>
+                    <th class="text-end"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (item of itemsPedido; track item.productoId; let i = $index) {
+                    @if (obtenerProducto(item.productoId); as p) {
+                      <tr>
+                        <td>{{ p.nombre }}</td>
+                        <td class="text-center">{{ item.cantidad }}</td>
+                        <td class="text-end">
+                          {{
+                            p.precio * item.cantidad
+                              | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO'
+                          }}
+                        </td>
+                        <td class="text-end">
+                          <button
+                            type="button"
+                            class="btn btn-sm btn-outline-danger py-0 px-2"
+                            (click)="quitarProducto(i)"
+                            aria-label="Quitar producto"
+                          >
+                            ×
+                          </button>
+                        </td>
+                      </tr>
+                    }
+                  }
+                </tbody>
+              </table>
+            </div>
+          }
+
+          <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-primary" [disabled]="enviando">
+              {{ enviando ? 'Guardando...' : 'Confirmar Pedido' }}
+            </button>
+            <a routerLink="/historial" class="btn btn-outline-dark"> Ir al Historial </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-5">
+    <div class="card shadow-sm border-0 bg-dark text-white">
+      <div class="card-body p-4">
+        <h5 class="card-title mb-3">Resumen del Pedido</h5>
+
+        @if (itemsPedido.length > 0) {
+          @for (item of itemsPedido; track item.productoId) {
+            @if (obtenerProducto(item.productoId); as prod) {
+              <div class="d-flex justify-content-between small mb-1">
+                <span>{{ prod.nombre }} × {{ item.cantidad }}</span>
+                <span>{{
+                  prod.precio * item.cantidad | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO'
+                }}</span>
+              </div>
+            }
+          }
+          <hr class="border-secondary" />
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-semibold">Costo Total:</span>
+            <span class="fs-5 fw-bold text-info">
+              {{ subtotalEstimado | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO' }}
+            </span>
+          </div>
+        } @else if (productoSeleccionado; as prod) {
+          <p class="mb-1"><strong>Producto:</strong> {{ prod.nombre }}</p>
+          <p class="mb-1"><strong>Categoría:</strong> {{ prod.categoria }}</p>
+          <p class="mb-1">
+            <strong>Precio unitario:</strong>
+            {{ prod.precio | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO' }}
+          </p>
+          <p class="mb-3"><strong>Stock actual:</strong> {{ prod.stock }} unidades</p>
+          <hr class="border-secondary" />
+          <div class="d-flex justify-content-between align-items-center">
+            <span class="fw-semibold">Subtotal estimado:</span>
+            <span class="fs-5 fw-bold text-info">
+              {{
+                prod.precio * (form.value.cantidad || 0)
+                  | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO'
+              }}
+            </span>
+          </div>
+        } @else {
+          <p class="text-white-50 mb-0">No hay productos disponibles para seleccionar.</p>
+        }
+      </div>
+    </div>
+  </div>
+</div>

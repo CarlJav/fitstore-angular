@@ -1,0 +1,95 @@
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+  <div>
+    <h2 class="mb-1">Catálogo de Productos</h2>
+    <p class="text-muted mb-0">Consulta existencias y selecciona productos para tu pedido.</p>
+  </div>
+
+  <div class="d-flex align-items-center gap-2">
+    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2">
+      Mostrando {{ productosFiltrados.length }} de {{ productos.length }}
+    </span>
+
+    <button
+      type="button"
+      class="btn btn-success btn-sm px-3 py-2 fw-semibold"
+      (click)="irARegistrar()"
+    >
+      Ir a pedir ({{ totalEnCarrito }})
+    </button>
+  </div>
+</div>
+
+@if (errorCarrito) {
+  <div class="alert alert-danger">{{ errorCarrito }}</div>
+}
+
+@if (avisoCarrito) {
+  <div
+    class="alert alert-success d-flex flex-wrap justify-content-between align-items-center gap-2"
+  >
+    <span>{{ avisoCarrito }}</span>
+    <button type="button" class="btn btn-sm btn-success" (click)="irARegistrar()">
+      Ir a pedir ahora
+    </button>
+  </div>
+}
+
+<!-- Filtros combinados: búsqueda por texto + categoría -->
+<div class="card shadow-sm border-0 mb-4">
+  <div class="card-body">
+    <div class="row g-3 align-items-end">
+      <div class="col-12 col-md-6">
+        <label for="busqueda" class="form-label fw-semibold">Buscar producto</label>
+        <input
+          id="busqueda"
+          type="text"
+          class="form-control"
+          placeholder="Ej. mancuerna, cuerda, guantes..."
+          [(ngModel)]="textoBusqueda"
+        />
+      </div>
+
+      <div class="col-12 col-md-4">
+        <label for="categoria" class="form-label fw-semibold">Categoría</label>
+        <select id="categoria" class="form-select" [(ngModel)]="categoriaSeleccionada">
+          @for (cat of categorias; track cat) {
+            <option [value]="cat">{{ cat }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="col-12 col-md-2 d-grid">
+        <button
+          type="button"
+          class="btn btn-outline-secondary text-dark"
+          (click)="limpiarFiltros()"
+        >
+          Limpiar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+@if (cargando) {
+  <div class="alert alert-info">Cargando productos...</div>
+} @else if (productosFiltrados.length === 0) {
+  <div class="alert alert-danger d-flex justify-content-between align-items-center">
+    <span>No se encontró el producto</span>
+    <button type="button" class="btn btn-sm btn-primary" (click)="limpiarFiltros()">
+      Ver Disponibles
+    </button>
+  </div>
+} @else {
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+    @for (item of productosFiltrados; track item.id) {
+      <div class="col">
+        <app-producto-card
+          [producto]="item"
+          (anadir)="anadirProducto($event)"
+          (pedir)="pedirProducto($event)"
+        />
+      </div>
+    }
+  </div>
+}

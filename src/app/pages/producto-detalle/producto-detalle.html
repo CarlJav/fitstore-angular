@@ -1,0 +1,40 @@
+<div class="mb-3">
+  <a routerLink="/catalogo" class="btn btn-outline-danger btn-sm">← Volver al catálogo</a>
+</div>
+
+@if (cargando()) {
+  <div class="alert alert-info">Cargando producto...</div>
+} @else if (!producto()) {
+  <div class="alert alert-warning">Producto no encontrado.</div>
+} @else {
+  <div class="card shadow-sm border-0">
+    <div class="row g-0">
+      <div class="col-12 col-md-5 bg-light d-flex align-items-center justify-content-center p-4">
+        <img
+          [src]="producto()!.imagen || '/img/placeholder-producto.jpg'"
+          [alt]="producto()!.nombre"
+          class="img-fluid"
+          style="max-height: 340px; object-fit: contain;"
+        />
+      </div>
+
+      <div class="col-12 col-md-7">
+        <div class="card-body p-4">
+          <span class="badge bg-secondary mb-2">{{ producto()!.categoria }}</span>
+          <h2 class="card-title mb-3">{{ producto()!.nombre }}</h2>
+
+          <!-- Texto distinto al de la tarjeta -->
+          <p class="text-body mb-2">{{ descripcionDetalle() }}</p>
+          <p class="small text-muted">
+            Resumen del catálogo: {{ producto()!.descripcion }}
+          </p>
+
+          <div class="fs-4 fw-bold text-primary my-3">
+            Bs{{ producto()!.precio | number: '1.2-2' : 'es-BO' }}
+          </div>
+          <p class="small text-muted mb-0">Stock disponible: {{ producto()!.stock }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+}

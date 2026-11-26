@@ -1,0 +1,3 @@
+- INTEGRANTES: CARLOS JAVIER HIDALGO SOLIZ
+- DESCRIPCION DEL PROYECTO
+FitStore es una aplicación web desarrollada en Angular (con arquitectura standalone, estilos de Bootstrap y Css) orientada a la venta de equipamiento deportivo y accesorios fitness. Permite explorar el catálogo con filtros combinados de texto y categoría, consultar el detalle de productos, armar un carrito y registrar pedidos con validación de stock, revisar el historial filtrando por estado (Confirmado / Cancelado), inspeccionar el detalle de cada pedido por :id y cancelar pedidos confirmados devolviendo automáticamente las unidades al inventario, todo con persistencia local en IndexedDB.

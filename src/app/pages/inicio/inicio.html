@@ -1,0 +1,183 @@
+<section class="hero-tienda py-5 px-3 mb-5 text-white text-center shadow-sm">
+  <div class="container py-4">
+    <p class="hero-lema mb-2">Equipa tu entrenamiento hoy...</p>
+    <div class="linea-roja mx-auto mb-3"></div>
+    <h1 class="display-1 fw-bold mb-3">FitStore</h1>
+    <p class="hero-descripcion mx-auto mb-4">
+      Artículos deportivos, accesorios de entrenamiento y gestión rápida de pedidos con
+      disponibilidad de stock en tiempo real.
+    </p>
+    <div class="d-flex flex-wrap justify-content-center gap-3">
+      <a routerLink="/catalogo" class="btn btn-success btn-lg px-4 fw-semibold">
+        Explorar Catálogo
+      </a>
+      <a routerLink="/registrar" class="btn btn-outline-success text-white btn-lg px-4">
+        Registrar Pedido
+      </a>
+      <a routerLink="/historial" class="btn btn-outline-success text-white btn-lg px-4">
+        Historial
+      </a>
+    </div>
+  </div>
+</section>
+
+<section class="mb-5">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold mb-2">Algunos de nuestros productos</h2>
+    <div class="d-flex justify-content-center gap-2 mb-2">
+      <span class="guion-acento"></span>
+      <span class="guion-acento"></span>
+    </div>
+    <p class="text-muted small">Todo lo que necesitas en un solo lugar.</p>
+  </div>
+
+  <div class="row g-4">
+    @for (item of lineas; track item.titulo) {
+      <div class="col-12 col-md-4">
+        <div class="card card-linea h-100 text-center overflow-hidden">
+          <img [src]="item.imagen" [alt]="item.titulo" class="card-img-top img-linea" />
+          <div class="card-body d-flex flex-column p-4">
+            <span class="badge bg-success align-self-center mb-2 px-3 py-1">
+              {{ item.subtitulo }}
+            </span>
+            <h5 class="card-title fw-bold mb-2">{{ item.titulo }}</h5>
+            <p class="card-text text-muted small flex-grow-1 mb-3">
+              {{ item.descripcion }}
+            </p>
+            <a
+              [routerLink]="item.ruta"
+              [queryParams]="item.categoriaFiltro ? { categoria: item.categoriaFiltro } : null"
+              class="btn btn-outline-success btn-sm fw-semibold"
+            >
+              {{ item.textoBoton }}
+            </a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</section>
+
+<section class="mb-5">
+  <div class="banner-quienes p-4 p-md-5 text-white text-center mb-4">
+    <h2 class="display-6 fw-bold mb-2">¿Quiénes Somos?</h2>
+    <p class="text-light small mb-0 mx-auto" style="max-width: 600px">
+      Especialistas en equipamiento fitness y accesorios deportivos pensados para acompañarte en
+      cada entrenamiento.
+    </p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card-vm h-100 p-4">
+        <div class="linea-roja mb-3"></div>
+        <h4 class="fw-bold mb-3">Nuestra Misión</h4>
+        <p class="text-muted mb-2">
+          Brindar equipamiento deportivo confiable, accesible y de alto rendimiento para atletas,
+          gimnasios y personas que entrenan en casa.
+        </p>
+        <p class="text-muted mb-0">
+          Facilitar una experiencia de compra clara y ágil, asegurando disponibilidad real de
+          productos en cada pedido.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card-vm h-100 p-4">
+        <div class="linea-roja mb-3"></div>
+        <h4 class="fw-bold mb-3">Nuestra Visión</h4>
+        <p class="text-muted mb-0">
+          Consolidarnos como la tienda de artículos fitness referente en la región, reconocidos por
+          la calidad de nuestros productos, la transparencia en cada entrega y el compromiso con una
+          comunidad activa y saludable.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mx-auto px-3 px-lg-4 my-4" style="max-width: 1500px">
+    <div class="row g-4 justify-content-center">
+      <div class="col-12 col-sm-6 col-xl-3" *ngFor="let item of beneficios">
+        <div class="card-beneficio h-100 p-4 d-flex align-items-center gap-3">
+          <img [src]="item.imagen" [alt]="item.titulo" class="beneficio-img" />
+          <div class="beneficio-texto">
+            <h6 class="fw-bold mb-1 fs-6">{{ item.titulo }}</h6>
+            <p class="text-muted mb-0" style="font-size: 0.92rem">{{ item.descripcion }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-4">
+  <div class="text-center mb-4">
+    <h2 class="fw-bold mb-2">Encuéntranos</h2>
+    <div class="d-flex justify-content-center gap-2 mb-2">
+      <span class="guion-acento"></span>
+      <span class="guion-acento"></span>
+    </div>
+    <p class="text-muted small">
+      Visita nuestra tienda física para recoger tus pedidos o recibir asesoramiento.
+    </p>
+  </div>
+
+  <div class="card border-0 shadow-sm overflow-hidden">
+    <div class="row g-0">
+      <div class="col-12 col-lg-4 p-4 d-flex flex-column justify-content-center bg-white">
+        <h5 class="fw-bold mb-3">FitStore</h5>
+
+        <p class="text-muted small mb-2">
+          <strong>Dirección:</strong> Av. Heroínas y Calle España, Cochabamba
+        </p>
+        <p class="text-muted small mb-2">
+          <strong>Horario:</strong> Lunes a Sábado · 08:30 a 20:00
+        </p>
+        <p class="text-muted small mb-4">
+          <strong>Retiro en tienda:</strong> Disponible inmediatamente tras registrar tu pedido.
+        </p>
+
+        <div class="d-flex flex-column align-items-start gap-2">
+          <a routerLink="/registrar" class="btn btn-success btn-sm px-3"> Realizar un pedido </a>
+
+          <span class="texto-contacto mt-1">Redes Sociales</span>
+
+          <div class="d-flex align-items-center gap-3">
+            <a
+              href="https://wa.me/591XXXXXXXX?text=Hola%20FitStore,%20quisiera%20m%C3%A1s%20informaci%C3%B3n"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Abrir WhatsApp de FitStore"
+              class="d-inline-block"
+            >
+              <img src="/img/whatsappLogo.jpg" alt="WhatsApp" class="wsp-logo-link" />
+            </a>
+
+            <a
+              href="https://www.facebook.com/TU_PAGINA_DE_FITSTORE"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Abrir Facebook de FitStore"
+              class="d-inline-block"
+            >
+              <img src="/img/facebook.png" alt="Facebook" class="wsp-logo-link" />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-8">
+        <div class="mapa-contenedor">
+          <iframe
+            title="Ubicación exacta de FitStore"
+            src="https://maps.google.com/maps?q=-19.0405,-65.2626&z=16&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          >
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

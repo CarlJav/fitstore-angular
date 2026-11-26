@@ -1,0 +1,125 @@
+<!-- Encabezado y navegación -->
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-4">
+  <div>
+    <h2 class="mb-1">Detalle del Pedido</h2>
+    <p class="text-muted mb-0">Consulta los productos incluidos y gestiona el estado del pedido.</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a routerLink="/historial" class="btn btn-outline-secondary">Volver al historial</a>
+    <a routerLink="/catalogo" class="btn btn-outline-primary">Ver catálogo</a>
+  </div>
+</div>
+
+@if (mensajeError) {
+  <div class="alert alert-danger">{{ mensajeError }}</div>
+}
+
+@if (mensajeExito) {
+  <div class="alert alert-success">{{ mensajeExito }}</div>
+}
+
+@if (cargando) {
+  <div class="alert alert-info">Cargando detalle del pedido...</div>
+} @else if (noEncontrado || !pedido) {
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-4 text-center">
+      <h4 class="mb-2">Pedido no encontrado</h4>
+      <p class="text-muted mb-3">
+        El pedido solicitado no existe o el identificador de la URL no es válido.
+      </p>
+      <a routerLink="/historial" class="btn btn-primary">Ir al Historial de Pedidos</a>
+    </div>
+  </div>
+} @else {
+  <div class="row g-4">
+    <div class="col-12 col-lg-5">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="card-title mb-0">Pedido #{{ pedido.id }}</h5>
+            <span
+              class="badge fs-6"
+              [ngClass]="pedido.estado === 'Confirmado' ? 'bg-success' : 'bg-danger'"
+            >
+              {{ pedido.estado }}
+            </span>
+          </div>
+
+          <p class="mb-2"><strong>Cliente:</strong> {{ pedido.cliente }}</p>
+          <p class="mb-2">
+            <strong>Fecha de registro:</strong> {{ pedido.fecha | date: 'dd/MM/yyyy HH:mm' }}
+          </p>
+          <p class="mb-3">
+            <strong>Total del pedido:</strong>
+            <span class="fs-5 fw-bold text-primary ms-1">
+              {{ pedido.total | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO' }}
+            </span>
+          </p>
+
+          <hr />
+
+          @if (pedido.estado === 'Confirmado') {
+            <p class="text-muted small mb-3">
+              Al cancelar este pedido, su estado pasará a <strong>Cancelado</strong> y las unidades
+              volverán automáticamente al stock del catálogo.
+            </p>
+            <button
+              type="button"
+              class="btn btn-danger w-100"
+              [disabled]="cancelando"
+              (click)="cancelarPedidoActual()"
+            >
+              {{ cancelando ? 'Cancelando pedido...' : 'Cancelar Pedido y Devolver Stock' }}
+            </button>
+          } @else {
+            <div class="alert alert-secondary mb-0 small">
+              Este pedido fue <strong>Cancelado</strong>.
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-7">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white py-3">
+          <h5 class="mb-0">Productos del Pedido</h5>
+        </div>
+        <div class="table-responsive">
+          <table class="table align-middle mb-0">
+            <thead class="table-light">
+              <tr>
+                <th>Producto</th>
+                <th class="text-center">Cantidad</th>
+                <th class="text-end">Precio Unit.</th>
+                <th class="text-end">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of pedido.items; track item.productoId) {
+                <tr>
+                  <td class="fw-semibold">{{ item.nombreProducto }}</td>
+                  <td class="text-center">{{ item.cantidad }}</td>
+                  <td class="text-end">
+                    {{ item.precioUnitario | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO' }}
+                  </td>
+                  <td class="text-end fw-bold">
+                    {{ item.subtotal | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO' }}
+                  </td>
+                </tr>
+              }
+            </tbody>
+            <tfoot class="table-light">
+              <tr>
+                <td colspan="3" class="text-end fw-bold">Total:</td>
+                <td class="text-end fw-bold text-primary fs-6">
+                  {{ pedido.total | currency: 'Bs. ' : 'symbol' : '1.2-2' : 'es-BO' }}
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+}
