@@ -19,6 +19,20 @@ FitStore es una aplicación web desarrollada en Angular (con arquitectura standa
 * **Historial de Pedidos (`/historial`):** Listado de pedidos registrados con formato de fecha (`date`) y moneda (`currency`), filtro por estado (`Confirmado` / `Cancelado`) y acceso al detalle.
 * **Detalle y Cancelación (`/pedidos/:id`):** Consulta persistente por identificador (soporta recarga con `F5`), manejo de ID inexistente y cancelación con devolución automática de unidades al stock.
 
+## Instalación y Ejecución Local
+Clonar el repositorio:
+git clone https://github.com/CarlJav/fitstore-angular.git
+
+Entrar a la carpeta del proyecto e instalar dependencias:
+cd fitstore-angular
+npm install
+
+Levantar el servidor de desarrollo:
+ng serve
+
+Abrir en el navegador:
+Ingresa a http://localhost:4200/ en tu computadora, o ejecuta ng serve --host 0.0.0.0 para probar la aplicación desde un dispositivo móvil conectado a la misma red Wi-Fi.
+
 ## Estructura del Proyecto
 
 ```text
@@ -28,3 +42,4 @@ src/app/
 ├── services/       # TiendaService (lógica de negocio y conexión con IndexedDB)
 ├── app.routes.ts   # Definición de rutas y navegación
 └── app.ts / .html  # Componente raíz con barra de navegación responsiva y footer
+
